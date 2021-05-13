@@ -38,9 +38,6 @@
 			var editor_height = editor.data("editor-height");
 			var editor_wrap = "#mdeditor_" + editor_sequence;
 			var editor_textarea = editor_wrap + " .rg_mde_code";
-			var curr_content = insert_form
-				.find("input,textarea")
-				.filter("[name=content]");
 
 			var where = null;
 			var target = insert_form
@@ -61,8 +58,8 @@
 				function (data) {
 					var markdown_data;
 					if (!data.content) {
-						if (curr_content.val()) {
-							markdown_data = curr_content.val();
+						if (content_input.val()) {
+							markdown_data = content_input.val();
 						} else {
 							markdown_data = "";
 						}
