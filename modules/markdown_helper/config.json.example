@@ -1,0 +1,47 @@
+{
+	"srls": ["document_srl", "comment_srl"],
+	"triggers": [
+		[
+			"document.deleteDocument",
+			"markdown_helper",
+			"controller",
+			"triggerDeleteMarkdown",
+			"after"
+		],
+		[
+			"document.insertDocument",
+			"markdown_helper",
+			"controller",
+			"triggerInsertMarkdown",
+			"after"
+		],
+		[
+			"document.updateDocument",
+			"markdown_helper",
+			"controller",
+			"triggerUpdateMarkdown",
+			"after"
+		],
+		[
+			"comment.deleteComment",
+			"markdown_helper",
+			"controller",
+			"triggerDeleteMarkdown",
+			"after"
+		],
+		[
+			"comment.insertComment",
+			"markdown_helper",
+			"controller",
+			"triggerInsertMarkdown",
+			"after"
+		],
+		[
+			"comment.updateComment",
+			"markdown_helper",
+			"controller",
+			"triggerUpdateMarkdown",
+			"after"
+		]
+	]
+}

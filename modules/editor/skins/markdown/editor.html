@@ -1,0 +1,23 @@
+<load target="../../tpl/js/editor_common.js" />
+<load target="css/markdown_editor.css" />
+<load target="js/hljs/highlight.min.js" />
+<load target="js/markdown-it.min.js" />
+<load target="js/editor_init.js" />
+<load target="js/mdeditor.js" />
+
+<div id="mdeditor_wrapper_{$editor_sequence}" class="mdeditor_wrapper">
+	<input type="hidden" name="markdown_content" value="{$getMdData}" />
+	<input
+		type="hidden"
+		name="editor_primary_key"
+		value="{$editor_primary_key_name}"
+	/>
+	<div
+		id="mdeditor_{$editor_sequence}"
+		class="mdeditor {$colorset}"
+		data-editor-sequence="{$editor_sequence}"
+		data-editor-primary-key-name="{$editor_primary_key_name}"
+		data-editor-content-key-name="{$editor_content_key_name}"
+		data-editor-height="{$editor_height}"
+	></div>
+</div>

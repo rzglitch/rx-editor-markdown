@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module version="0.2">
+	<title xml:lang="ko">마크다운 헬퍼</title>
+	<description xml:lang="ko">마크다운 에디터 사용 시 게시물 수정을 위한 원본 마크다운 데이터를 저장합니다.</description>
+	<version>0.1</version>
+	<date>2021-05-20</date>
+	<category>service</category>
+
+	<author email_address="rzglitch@tuta.io" link="https://www.shoutel.com">
+		<name xml:lang="ko">rzglitch</name>
+	</author>
+</module>

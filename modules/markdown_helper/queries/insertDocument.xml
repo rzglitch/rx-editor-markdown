@@ -1,0 +1,11 @@
+<query id="insertDocument" action="insert">
+	<tables>
+		<table name="markdown_helper" />
+	</tables>
+	<columns>
+		<column name="m_helper_srl" var="m_helper_srl" notnull="notnull" />
+		<column name="target_srl" var="target_srl" notnull="notnull" />
+		<column name="content" var="content" notnull="notnull" />
+		<column name="last_update" var="last_update" default="curdate()" />
+	</columns>
+</query>
