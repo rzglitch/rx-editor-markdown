@@ -2,9 +2,12 @@
 <skin version="0.2">
 	<title xml:lang="ko">Markdown Editor</title>
 	<description xml:lang="ko">Markdown Editor</description>
-	<version>0.2.0</version>
+	<version>0.2.1</version>
 	<date>2021-05-14</date>
 	<colorset>
+		<color name="none">
+			<title xml:lang="ko">라이믹스 색상</title>
+		</color>
 		<color name="light">
 			<title xml:lang="ko">Light</title>
 		</color>
