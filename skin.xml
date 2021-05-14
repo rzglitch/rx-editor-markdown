@@ -2,7 +2,7 @@
 <skin version="0.2">
 	<title xml:lang="ko">Markdown Editor</title>
 	<description xml:lang="ko">Markdown Editor</description>
-	<version>0.1.3</version>
+	<version>0.2.0</version>
 	<date>2021-05-14</date>
 	<colorset>
 		<color name="light">

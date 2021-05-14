@@ -1,5 +1,7 @@
 function rgMdEditor() {
 	this.id = null;
+	this.height = "500px";
+	this.previewEnabled = false;
 	this.init = function (id) {
 		if (this.id) {
 			console.error("This MdEditor has already been initialized.");
@@ -7,8 +9,8 @@ function rgMdEditor() {
 		}
 		this.id = id;
 		var self = this;
+		var editor_body = this.id + " .rg_mde_body";
 		var preview_parent = id + " .markdown-data";
-		var code_parent = id + " .markdown-code";
 		var code = id + " .rg_mde_code";
 		var html_data =
 			"PGRpdiBjbGFzcz0icmdfbWRlX3dyYXAiPgogIDxkaXYgY2xhc3M9InJnX21kZV90b29sYmFyIj4KICAgIDx1bD4KICAgICAgPGxpPjxidXR0b24gdHlwZT0iYnV0dG9uIiBjbGFzcz0icmdfbWRlX3RiX2JvbGQiPjxiPkI8L2I+PC9idXR0b24+PC9saT4KICAgICAgPGxpPjxidXR0b24gdHlwZT0iYnV0dG9uIiBjbGFzcz0icmdfbWRlX3RiX2l0YWxpYyI+PGk+aTwvaT48L2J1dHRvbj48L2xpPgogICAgICA8bGk+PGJ1dHRvbiB0eXBlPSJidXR0b24iIGNsYXNzPSJyZ19tZGVfdGJfbGluayI+PHU+bGluazwvdT48L2J1dHRvbj48L2xpPgogICAgICA8bGk+PGJ1dHRvbiB0eXBlPSJidXR0b24iIGNsYXNzPSJyZ19tZGVfdGJfaW1hZ2UiPmltYWdlPC9idXR0b24+PC9saT4KICAgICAgPGxpPjxidXR0b24gdHlwZT0iYnV0dG9uIiBjbGFzcz0icmdfbWRlX3RiX3ByZXZpZXciPlByZXZpZXc8L2J1dHRvbj48L2xpPgogICAgPC91bD4KICA8L2Rpdj4KICA8ZGl2IGNsYXNzPSJyZ19tZGVfYm9keSI+CiAgICA8ZGl2IGNsYXNzPSJtYXJrZG93bi1jb2RlIj4KICAgICAgPHRleHRhcmVhIGNsYXNzPSJyZ19tZGVfY29kZSI+PC90ZXh0YXJlYT4KICAgIDwvZGl2PgogICAgPGRpdiBjbGFzcz0ibWFya2Rvd24tZGF0YSI+CiAgICAgIDxwIGNsYXNzPSJwcmV2aWV3LW1vZGUtdGl0bGUiPlByZXZpZXcgTW9kZTwvcD4KICAgICAgPGRpdiBjbGFzcz0icmdfbWRlX3ByZXZpZXciPjwvZGl2PgogICAgPC9kaXY+CiAgPC9kaXY+CjwvZGl2Pg==";
@@ -22,41 +24,53 @@ function rgMdEditor() {
 		var el_image = id + " .rg_mde_tb_image";
 		var el_preview = id + " .rg_mde_tb_preview";
 
+		var input_forms = {
+			bold: "**{$1}**",
+			italic: "*{$1}*",
+			link: "[text]({$1})",
+			image: "![alt]({$1})"
+		};
+
+		var input_buttons = [el_bold, el_italic, el_link, el_image];
+
 		$(function () {
-			$(el_bold).click(function () {
+			$(input_buttons.join(", ")).click(function () {
+				var my_class = $(this).attr("class");
+				my_class = my_class.replace("rg_mde_tb_", "");
+				var replaced = input_forms[my_class];
+
 				var selected_txt = self.getSelectedTxt(code);
-				self.insertAtCursor(code, "**" + selected_txt + "**");
-			});
-			$(el_italic).click(function () {
-				var selected_txt = self.getSelectedTxt(code);
-				self.insertAtCursor(code, "*" + selected_txt + "*");
-			});
-			$(el_link).click(function () {
-				var selected_txt = self.getSelectedTxt(code);
-				self.insertAtCursor(code, "[text](" + selected_txt + ")");
-			});
-			$(el_image).click(function () {
-				var selected_txt = self.getSelectedTxt(code);
-				self.insertAtCursor(code, "![alt](" + selected_txt + ")");
+
+				if (!selected_txt) {
+					if (my_class == "link" || my_class == "image") {
+						selected_txt = "https://example.com/example.jpg";
+					} else {
+						selected_txt = "text";
+					}
+				}
+
+				var output = replaced.replace("{$1}", selected_txt);
+				self.insertAtCursor(code, output);
 			});
 			$(el_preview).click(function () {
 				var d = $(preview_parent).css("display");
 				if (d == "none") {
 					$(preview_parent).show();
-					$(code_parent).hide();
+					$(editor_body).css("height", "auto");
+					self.renderMarkdownData();
+					self.previewEnabled = true;
 				} else if (d == "block") {
 					$(preview_parent).hide();
-					$(code_parent).show();
+					var height = self.getHeight();
+					$(editor_body).css("height", height);
+					self.previewEnabled = false;
 				}
 			});
 
-			$(code).bind(
-				"input propertychange blur mouseup keyup",
-				function () {
-					self.renderMarkdownData();
-				}
-			);
-			$(id + " .rg_mde_code").on("keydown", function (e) {
+			$(code).bind("keyup mouseup", function () {
+				if (self.previewEnabled) self.renderMarkdownData();
+			});
+			$(code).on("keydown", function () {
 				if (event.keyCode === 9) {
 					var v = this.value,
 						s = this.selectionStart,
@@ -88,7 +102,7 @@ function rgMdEditor() {
 				return "";
 			},
 		});
-		var result = md.render(this.getMarkdownText());
+		var result = HtmlSanitizer.SanitizeHtml(md.render(this.getMarkdownText()));
 		$(preview).html(result);
 	};
 	this.addPreviewClass = function (classname) {
@@ -118,11 +132,14 @@ function rgMdEditor() {
 	this.setHeight = function (height) {
 		var body = this.id + " .rg_mde_body";
 		var code = this.id + " .rg_mde_body .markdown-code";
-		var data = this.id + " .rg_mde_body .markdown-data";
+
+		this.editorHeight = height;
 
 		$(body).css("height", height);
 		$(code).css("height", height);
-		$(data).css("height", height);
+	};
+	this.getHeight = function () {
+		return this.editorHeight;
 	};
 	this.insertAtCursor = function (el, myValue) {
 		var myField = document.querySelector(el);
@@ -140,11 +157,11 @@ function rgMdEditor() {
 		} else {
 			myField.value += myValue;
 		}
-		this.renderMarkdownData();
+		if (self.previewEnabled) self.renderMarkdownData();
 	};
 	this.changeContent = function (data) {
 		var code = this.id + " .rg_mde_code";
 		$(code).val(data);
-		this.renderMarkdownData();
+		if (self.previewEnabled) self.renderMarkdownData();
 	};
 }
