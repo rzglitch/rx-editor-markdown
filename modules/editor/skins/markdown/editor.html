@@ -2,8 +2,10 @@
 <load target="css/markdown_editor.css" />
 <load target="js/hljs/highlight.min.js" />
 <load target="js/markdown-it.min.js" />
+<load target="js/turndown/turndown.min.js" />
 <load target="js/editor_init.js" />
 <load target="js/mdeditor.js" />
+<load target="js/interface.js" />
 
 <div id="mdeditor_wrapper_{$editor_sequence}" class="mdeditor_wrapper">
 	<input type="hidden" name="markdown_content" value="{$getMdData}" />
@@ -20,4 +22,7 @@
 		data-editor-content-key-name="{$editor_content_key_name}"
 		data-editor-height="{$editor_height}"
 	></div>
+	<!--@if($allow_fileupload)-->
+		<include target="../ckeditor/file_upload.html" />
+	<!--@endif-->
 </div>

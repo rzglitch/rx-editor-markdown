@@ -1,24 +1,23 @@
 "use strict";
 
 (function ($) {
-	// Save the cursor position.
-	var ranges = [];
-	var saveSelection = function () {
-		var sel = window.getSelection();
-		ranges = [];
-		if (sel.getRangeAt && sel.rangeCount) {
-			for (let i = 0; i < sel.rangeCount; i++) {
-				ranges.push(sel.getRangeAt(i));
-			}
-		}
-	};
-
 	// Convert YouTube links.
 	var convertYouTube = function (str) {
 		var regexp = /https?:\/\/(www\.youtube(?:-nocookie)?\.com\/(?:watch\?v=|v\/|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]+)\S*/g;
 		var embed =
 			'<div class="video_container"><iframe src="https://www.youtube.com/embed/$2" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>';
 		return String(str).replace(regexp, embed);
+	};
+
+	// Insert content at cursor position.
+	var insertContent = function(editor, content) {
+		var insert_form = $(editor.id).closest("form");
+		var markdown_input = insert_form
+				.find("input,textarea")
+				.filter("[name=markdown_content]");
+		editor.putText(content);
+		var mdcontent = editor.getMarkdownText();
+		markdown_input.val(mdcontent);
 	};
 
 	// Page load event handler.
@@ -89,9 +88,7 @@
 					return;
 				}
 				content = convertYouTube(content);
-				md_editor.putText(content);
-				var mdcontent = md_editor.getMarkdownText();
-				markdown_input.val(mdcontent);
+				insertContent(md_editor, content);
 				event.preventDefault();
 			});
 
@@ -107,16 +104,23 @@
 
 	// Simulate CKEditor for file upload integration.
 	window._getCkeInstance = function (editor_sequence) {
-		var instance = $("#mdeditor_instance_" + editor_sequence);
+		var md_editor = "#mdeditor_" + editor_sequence;
+		var editor_obj = new rgMdEditor();
+		editor_obj.selectInitializedEditor(md_editor);
+
+		var turndownService = new TurndownService();
+
 		return {
 			getData: function () {
-				return String(instance.html());
+				return editor_obj.getMarkdownText();
 			},
 			setData: function (content) {
-				instance.html(content);
+				editor_obj.changeContent(content);
 			},
 			insertHtml: function (content) {
-				insertContent(instance, content);
+				var conv_markdown = turndownService.turndown(content);
+				conv_markdown += "\n"
+				insertContent(editor_obj, conv_markdown);
 			},
 		};
 	};

@@ -1,6 +1,10 @@
 function rgMdEditor() {
 	this.id = null;
 	this.init = function (id) {
+		if (this.id) {
+			console.error("This MdEditor has already been initialized.");
+			return false;
+		}
 		this.id = id;
 		var self = this;
 		var preview_parent = id + " .markdown-data";
@@ -63,6 +67,13 @@ function rgMdEditor() {
 				}
 			});
 		});
+	};
+	this.selectInitializedEditor = function(id) {
+		if ($(id).find(".rg_mde_wrap")) {
+			this.id = id;
+		} else {
+			console.error("MdEditor has not been initialized.");
+		}
 	};
 	this.renderMarkdownData = function () {
 		var preview = this.id + " .rg_mde_preview";
