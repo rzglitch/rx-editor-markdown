@@ -4,7 +4,9 @@
 
 반드시 [마크다운 헬퍼 모듈](https://github.com/rzglitch/rx-module-markdown_helper)과 함께 사용하셔야 합니다.
 
-라이믹스 코어 파일을 건드리지 않습니다.
+v0.3.0 부터 에디터 js를 번들로 제공합니다.
+
+에디터 소스코드는 [https://github.com/rzglitch/rg-mdeditor](https://github.com/rzglitch/rg-mdeditor)에 있습니다.
 
 ## 라이선스
 
