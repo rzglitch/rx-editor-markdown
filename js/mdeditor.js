@@ -76,6 +76,15 @@
 				}
 			);
 
+			// Set editor sequence and other info to the form.
+			insert_form[0].setAttribute("editor_sequence", editor_sequence);
+			editorRelKeys[editor_sequence] = {};
+			editorRelKeys[editor_sequence].primary = insert_form
+			  .find("input[name='" + primary_key + "']")
+			  .get(0);
+			editorRelKeys[editor_sequence].content = content_input;
+			editorRelKeys[editor_sequence].func = editorGetContent;
+
 			// Clean up pasted content.
 			$(editor_textarea).on("paste", function (event) {
 				var clipboard_data =
@@ -95,10 +104,6 @@
 			// Copy edited content to the actual input element.
 			editor.on("mouseout change", function (event) {
 				md_editor.renderMarkdownData();
-				var content = md_editor.getHtmlText();
-				content_input.val(content);
-				var mdcontent = md_editor.getMarkdownText();
-				markdown_input.val(mdcontent);
 				event.preventDefault();
 			});
 		});
