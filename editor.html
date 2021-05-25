@@ -5,8 +5,22 @@
 <load target="js/mdeditor.js" />
 <load target="js/interface.js" />
 
+{@
+$oMarkdown_helperModel = getModel('markdown_helper');
+$srls = $oMarkdown_helperModel->getConfig('srls');
+$target_srl = null;
+}
+
+<!--@foreach($srls as $srl)-->
+<!--@if(Context::get($srl) == $editor_sequence)-->
+{@ $target_srl = Context::get($srl) }
+<!--@endif-->
+<!--@endforeach-->
+
+{@ $getMdData = $oMarkdown_helperModel->getMarkdownData($target_srl) }
+
 <div id="mdeditor_wrapper_{$editor_sequence}" class="mdeditor_wrapper">
-	<input type="hidden" name="markdown_content" value="{$getMdData}" />
+	<input type="hidden" name="markdown_content" value="{htmlentities($getMdData)}" />
 	<input
 		type="hidden"
 		name="editor_primary_key"

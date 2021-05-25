@@ -43,38 +43,19 @@
 				.find("input,textarea")
 				.filter("[name=" + primary_key + "]");
 
-			var params = {
-				where: where,
-				target_srl: target.val(),
-			};
 			var md_editor = new rgMdEditor();
 			md_editor.init(editor_wrap);
 			md_editor.addPreviewClass("rhymix_content");
 
-			exec_json(
-				"markdown_helper.getMarkdownData",
-				params,
-				function (data) {
-					var markdown_data;
-					if (!data.content) {
-						if (content_input.val()) {
-							markdown_data = content_input.val();
-						} else {
-							markdown_data = "";
-						}
-					} else {
-						markdown_data = data.content;
-					}
-
-					markdown_input.val(markdown_data);
-
-					md_editor.setHeight(editor_height + "px");
-					var content = markdown_input.val();
-					if (content) {
-						md_editor.changeContent(markdown_input.val());
-					}
-				}
-			);
+			md_editor.setHeight(editor_height + "px");
+			var content = markdown_input.val();
+			if (content) {
+				md_editor.changeContent(markdown_input.val());
+			} else {
+				content = content_input.val();
+				markdown_input.val(content);
+				md_editor.changeContent(markdown_input.val());
+			}
 
 			// Set editor sequence and other info to the form.
 			insert_form[0].setAttribute("editor_sequence", editor_sequence);
@@ -104,6 +85,10 @@
 			// Copy edited content to the actual input element.
 			editor.on("mouseout change", function (event) {
 				md_editor.renderMarkdownData();
+				var content = md_editor.getHtmlText();
+				content_input.val(content);
+				var mdcontent = md_editor.getMarkdownText();
+				markdown_input.val(mdcontent);
 				event.preventDefault();
 			});
 		});
