@@ -104,6 +104,10 @@
 			// Copy edited content to the actual input element.
 			editor.on("mouseout change", function (event) {
 				md_editor.renderMarkdownData();
+				var content = md_editor.getHtmlText();
+				content_input.val(content);
+				var mdcontent = md_editor.getMarkdownText();
+				markdown_input.val(mdcontent);
 				event.preventDefault();
 			});
 		});
